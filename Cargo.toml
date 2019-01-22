@@ -1,0 +1,6 @@
+[package]
+name = "skinny"
+version = "0.1.0"
+authors = ["stefan <stek@mailbox.org>"]
+
+[dependencies]
