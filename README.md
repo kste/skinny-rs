@@ -1,4 +1,4 @@
-# skinny-rs
+# skinny-rs [![Build Status](https://travis-ci.org/kste/skinny-rs.svg?branch=master)](https://travis-ci.org/kste/skinny-rs)
 A Rust implementation of the Skinny64 and Skinny128 block cipher. For more
 information on Skinny see the 
 [project website](https://sites.google.com/site/skinnycipher/).
