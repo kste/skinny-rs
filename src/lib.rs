@@ -4,43 +4,37 @@ mod skinny128;
 pub fn skinny64_64(input: &[u8; 8], tweakey: &[u8]) -> [u8; 8] {
     let num_rounds = 32;
     let round_keys = skinny64::key_schedule_64(tweakey, num_rounds, skinny64::TweakeyType::TK1);
-    let ciphertext = skinny64::skinny64(input, num_rounds, &round_keys);
-    ciphertext
+    skinny64::skinny64(input, num_rounds, &round_keys)
 }
 
 pub fn skinny64_128(input: &[u8; 8], tweakey: &[u8]) -> [u8; 8] {
     let num_rounds = 36;
     let round_keys = skinny64::key_schedule_64(tweakey, num_rounds, skinny64::TweakeyType::TK2);
-    let ciphertext = skinny64::skinny64(input, num_rounds, &round_keys);
-    ciphertext
+    skinny64::skinny64(input, num_rounds, &round_keys)
 }
 
 pub fn skinny64_192(input: &[u8; 8], tweakey: &[u8]) -> [u8; 8] {
     let num_rounds = 40;
     let round_keys = skinny64::key_schedule_64(tweakey, num_rounds, skinny64::TweakeyType::TK3);
-    let ciphertext = skinny64::skinny64(input, num_rounds, &round_keys);
-    ciphertext
+    skinny64::skinny64(input, num_rounds, &round_keys)
 }
 
 pub fn skinny128_128(input: &[u8; 16], tweakey: &[u8]) -> [u8; 16] {
     let num_rounds = 40;
     let round_keys = skinny128::key_schedule_128(tweakey, num_rounds, skinny128::TweakeyType::TK1);
-    let ciphertext = skinny128::skinny128(input, num_rounds, &round_keys);
-    ciphertext
+    skinny128::skinny128(input, num_rounds, &round_keys)
 }
 
 pub fn skinny128_256(input: &[u8; 16], tweakey: &[u8]) -> [u8; 16] {
     let num_rounds = 48;
     let round_keys = skinny128::key_schedule_128(tweakey, num_rounds, skinny128::TweakeyType::TK2);
-    let ciphertext = skinny128::skinny128(input, num_rounds, &round_keys);
-    ciphertext
+    skinny128::skinny128(input, num_rounds, &round_keys)
 }
 
 pub fn skinny128_384(input: &[u8; 16], tweakey: &[u8]) -> [u8; 16] {
     let num_rounds = 56;
     let round_keys = skinny128::key_schedule_128(tweakey, num_rounds, skinny128::TweakeyType::TK3);
-    let ciphertext = skinny128::skinny128(input, num_rounds, &round_keys);
-    ciphertext
+    skinny128::skinny128(input, num_rounds, &round_keys)
 }
 
 #[cfg(test)]

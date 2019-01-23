@@ -44,39 +44,35 @@ pub fn key_schedule_64(tweakey: &[u8], rounds: u64, keytype: TweakeyType) -> Vec
         }
 
         // Add constants
-        round_keys[16 * round as usize + 0] ^= CONSTANTS[round as usize] & 0xf;
+        round_keys[16 * round as usize] ^= CONSTANTS[round as usize] & 0xf;
         round_keys[16 * round as usize + 4] ^= CONSTANTS[round as usize] >> 4;
         round_keys[16 * round as usize + 8] ^= 0x2;
 
         // Apply permutation
         let mut tmp: Vec<u8> = vec![0; state.len()];
         for i in 0..state.len() {
-            tmp[i] = state[16* (i / 16) + KEY_PERM[i % 16] as usize];
+            tmp[i] = state[16 * (i / 16) + KEY_PERM[i % 16] as usize];
         }
-        for i in 0..state.len() {
-            state[i] = tmp[i];
-        }
+        state.clone_from_slice(&tmp);
 
         // LFSR
-
         match keytype {
             TweakeyType::TK2 => {
-                for i in 16..24 {
-                    state[i] =
-                        ((state[i] << 1) & 0xE) ^ ((state[i] >> 3) & 0x1) ^ ((state[i] >> 2) & 0x1);
+                for nibble in state.iter_mut().take(24).skip(16) {
+                    *nibble =
+                        ((*nibble << 1) & 0xE) ^ ((*nibble >> 3) & 0x1) ^ ((*nibble >> 2) & 0x1);
                 }
             }
             TweakeyType::TK3 => {
-                for i in 16..24 {
-                    state[i] =
-                        ((state[i] << 1) & 0xE) ^ ((state[i] >> 3) & 0x1) ^ ((state[i] >> 2) & 0x1);
+                for nibble in state.iter_mut().take(24).skip(16) {
+                    *nibble =
+                        ((*nibble << 1) & 0xE) ^ ((*nibble >> 3) & 0x1) ^ ((*nibble >> 2) & 0x1);
                 }
-                for i in 32..40 {
-                    state[i] =
-                        ((state[i] >> 1) & 0x7) ^ ((state[i]) & 0x8) ^ ((state[i] << 3) & 0x8);
+                for nibble in state.iter_mut().take(40).skip(32) {
+                    *nibble = ((*nibble >> 1) & 0x7) ^ ((*nibble) & 0x8) ^ ((*nibble << 3) & 0x8);
                 }
-            },
-            _ => ()
+            }
+            _ => (),
         }
     }
 
@@ -115,10 +111,10 @@ fn mix_columns(state: &[u8; 16]) -> [u8; 16] {
     // MixColumns
     for col in 0..4 {
         let tmp = state[12 + col];
-        tmp_state[12 + col] = state[0 + col] ^ state[8 + col];
+        tmp_state[12 + col] = state[col] ^ state[8 + col];
         tmp_state[8 + col] = state[4 + col] ^ state[8 + col];
-        tmp_state[4 + col] = state[0 + col];
-        tmp_state[0 + col] = tmp ^ tmp_state[12 + col];
+        tmp_state[4 + col] = state[col];
+        tmp_state[col] = tmp ^ tmp_state[12 + col];
     }
     tmp_state
 }
@@ -142,6 +138,7 @@ pub fn skinny64(input: &[u8; 8], rounds: u64, round_keys: &[u8]) -> [u8; 8] {
         state = shift_rows(&state);
         state = mix_columns(&state);
     }
+
     // Convert state to byte array
     for nibble in 0..16 {
         let val = state[nibble] << (4 * ((nibble + 1) % 2));
